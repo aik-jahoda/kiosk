@@ -3,11 +3,14 @@
 /**
  * Krellian Kiosk web interface.
  */
-var Kiosk = {
+var App = {
 
   PASSWORD_IS_SET_PATH: '/settings/password_is_set',
   LOGIN_PATH: '/login',
   SETUP_PATH: '/setup',
+  URL_PROPERTY_PATH: '/properties/url',
+  GO_ACTION_PATH: '/actions/go',
+  LOCATION_CHANGE_EVENT_PATH: '/events/locationchange',
 
   /**
    * Authentication token (JSON Web Token).
@@ -21,6 +24,8 @@ var Kiosk = {
     this.controlPanel = document.getElementById('control-panel');
     this.controls = document.getElementById('controls');
     this.urlBar = document.getElementById('url-bar');
+
+    // Handle submission of URL bar
     controls.addEventListener('submit', this.handleSubmit.bind(this));
     this.checkForPassword().then(()=> {
       this.controlPanel.classList.remove('hidden');
@@ -28,14 +33,26 @@ var Kiosk = {
     }).catch((error) => {
       console.log('Not logged in, redirecting...');
     });
+    
+    // Listen for URL changes
+    const locationChangeSource = 
+      new EventSource(this.LOCATION_CHANGE_EVENT_PATH + '?jwt=' + this.jwt);
+    locationChangeSource.addEventListener('locationchange',
+      this.handleLocationChange.bind(this));
 
+    // Get the current URL
+    this.getUrl().then((url) => {
+      this.urlBar.value = url;
+    });
   },
 
   /**
    * Handle a submitted URL to be loaded by the kiosk.
+   * 
+   * @param {Event} event The submit event.
    */
-  handleSubmit: function(e) {
-    e.preventDefault();
+  handleSubmit: function(event) {
+    event.preventDefault();
     var url = this.urlBar.value;
     var payload = '"' + url + '"';
     const headers = {
@@ -48,7 +65,37 @@ var Kiosk = {
       body: payload,
       headers: headers
     };
-    fetch('/actions/load_url', request);
+    fetch(this.GO_ACTION_PATH, request);
+  },
+
+  /**
+   * Get the current URL displayed by the kiosk.
+   * 
+   * @returns {Promise<string>} Resolves to URL as string.
+   */
+  getUrl: function() {
+    return new Promise((resolve, reject) => {
+      const headers = {
+        'Authorization': 'Bearer ' + this.jwt,
+        'Accept': 'application/json'
+      };
+      const request = {
+        method: 'GET',
+        headers: headers
+      };
+      fetch(this.URL_PROPERTY_PATH, request).then((response) => {
+        response.json().then((url) => {
+          resolve(url);
+        });
+      }).catch(() => {
+        console.error('Error getting url');
+      });
+    });
+
+  },
+
+  handleLocationChange: function(event) {
+    this.urlBar.value = event.data;
   },
 
   /**
@@ -93,7 +140,7 @@ var Kiosk = {
 /**
   * Start kiosk on page load.
   */
-window.addEventListener('load', function kiosk_onLoad() {
-  window.removeEventListener('load', kiosk_onLoad);
-  Kiosk.start();
+window.addEventListener('load', function app_onLoad() {
+  window.removeEventListener('load', app_onLoad);
+  App.start();
 });

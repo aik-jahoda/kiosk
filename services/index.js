@@ -1,8 +1,9 @@
 const express = require('express');
-const router = require('./services/router');
-const database = require('./services/database');
-const credentials = require('./services/models/credentials');
-const network = require('./services/models/network');
+const router = require('./router');
+const database = require('./database');
+const credentials = require('./models/credentials');
+const network = require('./models/network');
+const userAgent = require('./models/user-agent');
 const SD_LISTEN_FDS_START = 3; // First file descriptor number passed by systemd
 
 /**
@@ -39,7 +40,16 @@ var Services = {
     this.server.use(router);
     this.server.listen(port, () =>
       console.log(`Starting HTTP server...`));
+
+    // Start user agent
+    userAgent.start();
+  },
+
+  setChrome: function(chrome) {
+    userAgent.setChrome(chrome);
   }
+
+
 }
 
 module.exports = Services;

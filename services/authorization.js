@@ -25,20 +25,16 @@ function middleware(request, response, next) {
 }
 
 /**
- * Authorisation middleware.
+ * Authorization middleware.
  *
  * Authorizes a request based on its JWT (JSON Web Token).
  *
  * @param {Object} request HTTP request object.
+ * @returns {boolean} True if authorized, false if not.
  */
 function authorize(request) {
-  const authorization = request.headers.authorization;
-  // Check for authorization header
-  if (!authorization) {
-    return false;
-  }
-  const [type, token] = authorization.split(' ');
-  if (type !== 'Bearer') {
+  const token = extractJWT(request);
+  if(!token) {
     return false;
   }
 
@@ -51,6 +47,25 @@ function authorize(request) {
     return true;
   } catch {
     return false;
+  }
+}
+
+function extractJWT(request) {
+  // Check for JWT in URL query string
+  if (typeof request.query === 'object' && request.query.jwt) {
+    return request.query.jwt;
+  }
+
+  // Check for JWT in Authorization header
+  const authorization = request.headers.authorization;
+  if (!authorization) {
+    return false;
+  }
+  const [type, token] = authorization.split(' ');
+  if (type !== 'Bearer' || !token) {
+    return false;
+  } else {
+    return token;
   }
 }
 

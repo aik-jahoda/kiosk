@@ -2,14 +2,42 @@
   "@context": "https://www.w3.org/2019/wot/td/v1",
   "title": "Krellian Kiosk",
   "securityDefinitions": {
-    "none": { "scheme": "nosec"}
+    "bearer": {
+      "scheme": "bearer",
+      "authorization": "/login",
+      "format": "jwt",
+      "in": "header"
+    }
   },
-  "security": ["none"],
+  "security": ["bearer"],
+  "properties": {
+    "url": {
+      "type": "string",
+      "format": "uri",
+      "readonly": true,
+      "forms": [{"href": "/properties/url"}]
+    }
+  },
   "actions": {
-    "loadURL": {
+    "go": {
       "title": "Load URL",
-      "input": {"type": "string"},
-      "forms": [{"href": "/actions/load_url"}]
+      "input": {
+        "type": "string",
+        "format": "uri"
+      },
+      "forms": [{"href": "/actions/go"}]
+    }
+  },
+  "events": {
+    "locationchange": {
+      "data": {
+        "type": "string",
+        "format": "uri"
+      },
+      "forms": [{
+        "href": "/events/locationchange",
+        "subprotocol": "sse"
+      }]
     }
   },
   "links": [
