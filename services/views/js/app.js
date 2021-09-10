@@ -53,8 +53,21 @@ var App = {
    */
   handleSubmit: function(event) {
     event.preventDefault();
-    var url = this.urlBar.value;
-    var payload = '"' + url + '"';
+    var input = this.urlBar.value;
+    var url;
+    // Validate URL
+    try {
+      url = new URL(input);
+    // If invalid, try prepending http://
+    } catch(e) {
+      try {
+        url = new URL('http://' + input);
+        this.urlBar.value = url.href;
+      } catch(e) {
+        return;
+      }
+    }
+    var payload = JSON.stringify(url.href);
     const headers = {
       'Authorization': 'Bearer ' + this.jwt,
       'Content-Type': 'application/json',
@@ -94,6 +107,11 @@ var App = {
 
   },
 
+  /**
+   * Handle a locationchange event.
+   * 
+   * @param {Event} event The locationchange event.
+   */
   handleLocationChange: function(event) {
     this.urlBar.value = event.data;
   },
