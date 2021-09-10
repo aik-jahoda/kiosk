@@ -15,9 +15,17 @@ const userAgent = require('../models/user-agent');
  */
 router.post('/go', function(request, response) {
   if (request.body) {
-    var url = request.body;
-    userAgent.go(url);
-    response.status(201).json(url);
+    // Validate URL
+    let url;
+    try {
+      url = new URL(request.body);
+    } catch(e) {
+      response.status(400).send();
+      return;
+    }
+    // Navigate to URL
+    userAgent.go(url.href);
+    response.status(200).json({'status': 'completed'});
   } else {
     response.status(400).send();
   }
