@@ -6,7 +6,11 @@ Krellian Kiosk is a web runtime for interactive kiosks and digital signage.
 
 It acts as both a web client (to render web content) and a web server (so that screens can be remotely managed over the internet).
 
-<img src="https://krellian.com/products/player/images/krellian_player_ui.png" width="500">
+https://raw.githubusercontent.com/krellian/kiosk/master/docs/images/kiosk_ui.png
+
+<img src="https://raw.githubusercontent.com/krellian/kiosk/master/docs/images/kiosk_ui.png" width="500"><br />*Kiosk UI*
+
+<img src="https://raw.githubusercontent.com/krellian/kiosk/master/docs/images/remote_control_ui.png" width="500"><br />*Remote Control UI*
 
 ## Building
 
