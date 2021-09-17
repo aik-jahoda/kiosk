@@ -55,3 +55,17 @@ button:hover, input[type=submit]:hover, .button:hover {
   height: 3rem;
   margin: 3rem auto;
 }
+
+#message-area {
+  position: fixed;
+  width: 100%;
+  height: auto;
+  bottom: 0;
+  padding: 1rem;
+  max-height: calc(50% - 3rem);
+  overflow-y: scroll;
+}
+
+#message-area k-toast {
+  margin: 0 auto;
+}

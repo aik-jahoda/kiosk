@@ -24,6 +24,7 @@ var App = {
     this.controlPanel = document.getElementById('control-panel');
     this.controls = document.getElementById('controls');
     this.urlBar = document.getElementById('url-bar');
+    this.messageArea = document.getElementById('message-area');
 
     // Handle submission of URL bar
     controls.addEventListener('submit', this.handleSubmit.bind(this));
@@ -64,6 +65,7 @@ var App = {
         url = new URL('http://' + input);
         this.urlBar.value = url.href;
       } catch(e) {
+        this.showError('Invalid URL.');
         return;
       }
     }
@@ -100,8 +102,9 @@ var App = {
         response.json().then((url) => {
           resolve(url);
         });
-      }).catch(() => {
-        console.error('Error getting url');
+      }).catch((error) => {
+        this.showError('Error getting current URL from kiosk.');
+        console.error('Error getting url ' + error);
       });
     });
 
@@ -149,9 +152,20 @@ var App = {
           }
         })
       }).catch((error) => {
-        console.error('Failed to get password status.');
+        console.error('Failed to get password status + ' + error);
       });
     });
+  },
+
+  /**
+   * Show an error to the user with a toast.
+   * 
+   * @param {String} message The message to show to the user. 
+   */
+  showError(message) {
+    const toast = new Toast();
+    toast.setAttribute('message', message);
+    this.messageArea.appendChild(toast);
   }
 }
 
