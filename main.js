@@ -30,9 +30,6 @@ function start() {
     }
   });
 
-  // TODO: Remove workaround https://github.com/krellian/kiosk/issues/83
-  Menu.setApplicationMenu(null);
-
   // Load system chrome into main window
   console.log('Starting system chrome...');
   // TODO: Replace with WHATWG URL API https://github.com/krellian/kiosk/issues/84
