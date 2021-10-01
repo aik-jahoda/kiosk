@@ -36,12 +36,7 @@ function start() {
 
   // Load system chrome into main window
   console.log('Starting system chrome...');
-  // TODO: Replace with WHATWG URL API https://github.com/krellian/kiosk/issues/84
-  mainWindow.loadURL(url.format({
-    pathname: path.join(__dirname, 'chrome/index.html'),
-    protocol: 'file:',
-    slashes: true
-  }));
+  mainWindow.loadURL('file://' + path.join(__dirname, 'chrome/index.html'));
 
   // Inject reference to system chrome into UserAgent model in services for IPC
   services.setChrome(mainWindow.webContents);
