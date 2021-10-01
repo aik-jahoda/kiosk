@@ -3,7 +3,7 @@
  *
  * Main script starts up kiosk chrome and services.
  */
-const {app, BrowserWindow, Menu} = require('electron');
+const {app, BrowserWindow, ipcMain} = require('electron');
 const parseArgs = require('minimist');
 const url = require('url');
 const path = require('path');
@@ -14,6 +14,11 @@ function start() {
   // Parse command line arguments
   let args = parseArgs(process.argv.slice(2));
   let httpPort = args.p || DEFAULT_HTTP_PORT;
+  
+  // Respond to requests from the renderer process asking for the HTTP port
+  ipcMain.handle('getHttpPort', async (event, path) => {
+    return httpPort;
+  });
 
   // Start system services
   console.log('Starting system services...');
@@ -25,8 +30,7 @@ function start() {
     webPreferences: {
       nodeIntegration: true,
       webviewTag: true,
-      // TODO: Replace deprecated feature https://github.com/krellian/kiosk/issues/82
-      enableRemoteModule: true
+      contextIsolation: false
     }
   });
 

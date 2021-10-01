@@ -1,6 +1,5 @@
 const electron = require('electron');
 const ipcRenderer = electron.ipcRenderer;
-const parseArgs = require('minimist');
 const DEFAULT_HOST = 'http://localhost';
 const DEFAULT_PORT = '8080';
 const DEFAULT_PAGE = '/display';
@@ -14,14 +13,12 @@ const Chrome = {
   /**
    * Start Chrome.
    */
-  start: function() {
+  start: async function() {
     console.log('Starting chrome...');
     this.webview = document.getElementById('webview');
 
-    // Parse command line arguments to get HTTP port
-    //TODO: Replace deprecated 'remote' https://github.com/krellian/kiosk/issues/85
-    let args = parseArgs(electron.remote.process.argv.slice(2));
-    this.httpPort = args.p || DEFAULT_PORT;
+    // Get local HTTP port number for system services
+    this.httpPort = await ipcRenderer.invoke('getHttpPort');
 
     // If port configured by systemd, assume port 80
     if (this.httpPort == 'systemd') {

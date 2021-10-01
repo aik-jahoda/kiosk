@@ -14,9 +14,9 @@
   "author": "Ben Francis",
   "license": "GPL-3.0",
   "devDependencies": {
-    "electron": "^9.4.3",
-    "electron-packager": "^15.2.0",
-    "electron-rebuild": "^1.11.0"
+    "electron": "^15.0.0",
+    "electron-packager": "^15.4.0",
+    "electron-rebuild": "^3.2.3"
   },
   "dependencies": {
     "dbus": "^1.0.7",
