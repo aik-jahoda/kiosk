@@ -46,7 +46,7 @@
         width: 32px;
         height: 32px;
         margin: 5px;
-        background-image: url('images/close.svg');
+        background-image: url('/images/close.svg');
         background-repeat: no-repeat;
         background-color: transparent;
         border: none;

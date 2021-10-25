@@ -16,6 +16,7 @@ var Login = {
     this.loginForm = document.getElementById('login-form');
     this.usernameInput = document.getElementById('username-input');
     this.passwordInput = document.getElementById('password-input');
+    this.messageArea = document.getElementById('message-area');
     this.loginForm.addEventListener('submit', this.handleSubmit.bind(this));
     this.getScreenName().then((name) => {
       this.screenName.textContent = name;
@@ -80,10 +81,10 @@ var Login = {
     fetch(this.LOGIN_PATH, request).then((response) => {
       if (response.status == 400) {
         console.log('Username or password not provided.');
-        // TODO: Show error to user.
+        this.showError('Password not provided.');
       } else if (response.status == 401) {
         console.log('Incorrect username or password.');
-        // TODO: Show error to user.
+        this.showError('Incorrect password.');
       } else if(response.status == 200) {
         console.log('Authenticated successfully');
         response.json().then((result) => {
@@ -96,6 +97,17 @@ var Login = {
     }).catch((error) => {
       console.error(error);
     });
+  },
+
+  /**
+   * Show an error to the user with a toast.
+   * 
+   * @param {String} message The message to show to the user. 
+   */
+  showError(message) {
+    const toast = new Toast();
+    toast.setAttribute('message', message);
+    this.messageArea.appendChild(toast);
   }
 }
 
