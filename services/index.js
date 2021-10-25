@@ -1,6 +1,7 @@
 const express = require('express');
 const router = require('./router');
 const database = require('./database');
+const broadcast = require('./broadcast');
 const credentials = require('./models/credentials');
 const network = require('./models/network');
 const userAgent = require('./models/user-agent');
@@ -43,6 +44,10 @@ var Services = {
 
     // Start user agent
     userAgent.start();
+
+    // Start DNS-SD broadcast
+    broadcast.start(port);
+
   },
 
   setChrome: function(chrome) {
