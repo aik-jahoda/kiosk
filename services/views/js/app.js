@@ -80,7 +80,16 @@ var App = {
       body: payload,
       headers: headers
     };
-    fetch(this.GO_ACTION_PATH, request);
+    fetch(this.GO_ACTION_PATH, request).then(response =>  {
+      if(response.status == 401) {
+        this.redirectToLogin();
+      } else if(!response.ok) {
+        this.showError('Error navigating to URL.');
+      }
+    }).catch((error) => {
+      console.error('Error navigating to URL ' + error);
+      this.showError('Error navigating to URL.');
+    });
   },
 
   /**
@@ -99,6 +108,12 @@ var App = {
         headers: headers
       };
       fetch(this.URL_PROPERTY_PATH, request).then((response) => {
+        if(response.status == 401) {
+          this.redirectToLogin();
+        } else if(!response.ok) {
+          this.showError('Error getting current URL from kiosk.');
+          return;
+        }
         response.json().then((url) => {
           resolve(url);
         });
@@ -166,6 +181,13 @@ var App = {
     const toast = new Toast();
     toast.setAttribute('message', message);
     this.messageArea.appendChild(toast);
+  },
+
+  /**
+   * Redirect to the login page.
+   */
+  redirectToLogin() {
+    window.location.href = this.LOGIN_PATH;
   }
 }
 
