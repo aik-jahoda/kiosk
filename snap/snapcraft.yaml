@@ -7,7 +7,10 @@ confinement: strict
 grade: devel
 
 architectures:
-  - build-on: [armhf, arm64, amd64]
+  - build-on: armhf
+  - build-on: arm64
+  - build-on: amd64
+  #, , ]
 
 apps:
   krellian-kiosk:

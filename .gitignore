@@ -2,3 +2,6 @@ node_modules/
 db/
 *.snap
 krellian-kiosk_*.txt
+
+# MacOS system files
+.DS_Store
